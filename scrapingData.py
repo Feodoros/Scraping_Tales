@@ -188,7 +188,7 @@ def get_good_categories_other():
     snegurochka = 'https://deti-online.com/stihi/stihi-pro-snegurochku/'
     sneg = 'https://deti-online.com/stihi/stihi-pro-snezhinki/'
     snowman = 'https://deti-online.com/stihi/stihi-pro-snegovika/'
-
+    "zaebalsya"
     good_tales_other = [snowman, sneg, snegurochka, moroz, forlittle, tree, newyear, xmas, motherDay, teacher, fstsept, easter, masl, mart, fevral, stValentine, summer, spring, flowers, mushrooms, sea, fruits, osen, animals, birds, fishes, winter, nasekomye]
 
     return good_tales_other
