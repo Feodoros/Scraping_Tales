@@ -7,6 +7,7 @@ def get_html(url):
     response = urllib.request.urlopen(url)
     return response.read()
 
+
 # Парсим секреты с одной страницы в список.
 def scraping_secrets_from_page(html):
     soup = BeautifulSoup(html)
@@ -15,6 +16,7 @@ def scraping_secrets_from_page(html):
     for secret in div:
         secrets.append(secret.text)
     return secrets
+
 
 # Переходим на следующую страницу.
 def paginate(url):
@@ -25,6 +27,7 @@ def paginate(url):
     else:
         return url + "/page/15"
 
+
 # Парсим все секреты из категории в список списков (потому что иногда полезно было бы вытащить секреты с одной страницы, а не со всех разом).
 def scraping_all_secrets_from_category(url):
     secrets = []
@@ -32,6 +35,7 @@ def scraping_all_secrets_from_category(url):
         secrets.append(scraping_secrets_from_page(get_html(url)))
         url = paginate(url)
     return secrets
+
 
 # Парсим плохие рассказы.
 def scraping_bad_tales(bad_categories):
@@ -56,6 +60,7 @@ def scraping_links(url):
         links.append(tr['href'])
     return links
 
+
 # Парсим все стихи от одного автора.
 def scraping_all_verse_from_category(url):
     links = scraping_links(url)
@@ -63,6 +68,7 @@ def scraping_all_verse_from_category(url):
     for link in links:
         tales.append(scraping_verse('https://deti-online.com' + link))
     return tales
+
 
 # Парсим один стих.
 def scraping_verse(url):
@@ -77,6 +83,7 @@ def scraping_verse(url):
             except:
                 print('ebanyi site')
     return verse
+
 
 # Парсим стихи из других категорий, тк сайт размечен по-разному.
 def scraping_other_verses(url):
@@ -94,12 +101,14 @@ def scraping_other_verses(url):
         verses.append(verse_global)
     return verses
 
+
 # Парсим хорошие рассказы.
 def scraping_good_tales(good_categories):
     tales = []
     for category in good_categories:
         tales = tales + scraping_all_verse_from_category(category)
     return tales
+
 
 # Парсим хорошие рассказы (страниы сайта с другой разметкой.)
 def scraping_good_other_tales(good_categories):
@@ -108,7 +117,8 @@ def scraping_good_other_tales(good_categories):
         tales = tales + scraping_other_verses(category)
     return tales
 
-def main():
+
+def get_bad_categories():
     vulgar = 'https://ideer.ru/secrets/vulgar'
     angry = 'https://ideer.ru/secrets/angry'
     pizdec = 'https://ideer.ru/secrets/pizdec'
@@ -125,9 +135,10 @@ def main():
 
     bad_categories = [vulgar, angry, pizdec, lust, cherhuha, cruelty, ebanko, fuuu, betrayal, alco, boom, envy, enrage]
 
-    bad = scraping_bad_tales(bad_categories)
+    return bad_categories
 
 
+def get_good_categories():
     barto = 'https://deti-online.com/stihi/stihi-agnii-barto/'
     zahoder = 'https://deti-online.com/stihi/stihi-zahodera/'
     mihalkov = 'https://deti-online.com/stihi/stihi-mihalkova/'
@@ -140,7 +151,13 @@ def main():
     uspenskyi = 'https://deti-online.com/stihi/stihi-uspenskogo/'
     mecgera = 'https://deti-online.com/stihi/stihi-mecgera/'
 
-    good_tales = [barto, zahoder, mihalkov, berestov, sapgir, blaginina, surikov, shemyakina, gusarova, uspenskyi, mecgera]
+    good_tales = [barto, zahoder, mihalkov, berestov, sapgir, blaginina, surikov, shemyakina, gusarova, uspenskyi,
+                  mecgera]
+
+    return good_tales
+
+
+def get_good_categories_other():
 
     animals = 'https://deti-online.com/stihi/stihi-pro-zhivotnyh/'
     birds = 'https://deti-online.com/stihi/stihi-pro-ptic/'
@@ -174,7 +191,14 @@ def main():
 
     good_tales_other = [snowman, sneg, snegurochka, moroz, forlittle, tree, newyear, xmas, motherDay, teacher, fstsept, easter, masl, mart, fevral, stValentine, summer, spring, flowers, mushrooms, sea, fruits, osen, animals, birds, fishes, winter, nasekomye]
 
-    good = scraping_good_other_tales(good_tales_other) + scraping_good_tales(good_tales)
+    return good_tales_other
+
+
+def main():
+    bad = scraping_bad_tales(get_bad_categories())
+
+    good = scraping_good_other_tales(scraping_good_other_tales()) + scraping_good_tales(get_good_categories())
+
 
 if __name__ == '__main__':
     main()
